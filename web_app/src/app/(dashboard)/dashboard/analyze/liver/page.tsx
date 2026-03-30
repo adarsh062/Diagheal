@@ -86,11 +86,30 @@ function BookingModal({ doctor, onClose }: { doctor: Doctor; onClose: () => void
     const [date, setDate] = useState("");
     const [timeSlot, setTimeSlot] = useState("morning");
     const today = new Date().toISOString().split("T")[0];
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (!date) return;
         setBookingStatus("loading");
-        setTimeout(() => setBookingStatus("success"), 1500);
+        try {
+            const res = await fetch("/api/appointments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    doctorName: doctor.name,
+                    specialty: doctor.specialty,
+                    hospital: doctor.hospital,
+                    date: date,
+                    timeSlot: timeSlot
+                })
+            });
+            if (!res.ok) throw new Error("Failed to book");
+            setBookingStatus("success");
+        } catch (error) {
+            console.error(error);
+            setBookingStatus("idle");
+            alert("Failed to book appointment. Please try again.");
+        }
     };
+
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -300,6 +319,35 @@ export default function LiverAnalyzePage() {
         }
     };
 
+    const [recordsHistory, setRecordsHistory] = useState<any[]>([]);
+    const [loadingHistory, setLoadingHistory] = useState(false);
+
+    const fetchHistory = async () => {
+        setLoadingHistory(true);
+        try {
+            const res = await fetch("/api/records");
+            if (res.ok) {
+                const data = await res.json();
+                setRecordsHistory(data);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoadingHistory(false);
+        }
+    };
+
+    const handleDeleteRecord = async (id: string) => {
+        try {
+            const res = await fetch(`/api/records/${id}`, { method: "DELETE" });
+            if (res.ok) {
+                setRecordsHistory((prev) => prev.filter((r) => r.id !== id));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     const handleAnalyze = async (e: React.FormEvent) => {
         e.preventDefault();
         setStep("analyzing");
@@ -328,6 +376,34 @@ export default function LiverAnalyzePage() {
                 confidence_score: data.confidence_score,
                 message: data.message ?? "",
             });
+            
+            // Save to DB
+            if (data.prediction !== null && data.prediction !== undefined) {
+                try {
+                    await fetch('/api/records', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            prediction: data.prediction, 
+                            confidence: data.confidence_score,
+                            age: formData.Age,
+                            gender: formData.Gender,
+                            tb: formData.TB,
+                            db: formData.DB,
+                            alkphos: formData.Alkphos,
+                            sgpt: formData.Sgpt,
+                            sgot: formData.Sgot,
+                            tp: formData.TP,
+                            alb: formData.ALB,
+                            agRatio: formData.AG_Ratio,
+                            type: "LIVER"
+                        })
+                    });
+                } catch (e) {
+                    console.error("Failed to save record", e);
+                }
+            }
+
             setStep("result");
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : "Network error — could not reach the analysis server.";
@@ -356,7 +432,7 @@ export default function LiverAnalyzePage() {
             <div className="flex justify-center md:justify-start mb-7">
                 <div className="flex gap-1 bg-gray-100 dark:bg-slate-800/60 p-1 rounded-full w-fit">
                     {(["new", "compare"] as const).map((tab) => (
-                        <button key={tab} onClick={() => setActiveTab(tab)}
+                        <button key={tab} onClick={() => { setActiveTab(tab); if (tab === "compare") fetchHistory(); }}
                             className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 capitalize ${activeTab === tab
                                 ? "bg-white dark:bg-cyan-600 text-cyan-700 dark:text-white shadow-sm"
                                 : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}>
@@ -675,31 +751,68 @@ export default function LiverAnalyzePage() {
                 <div className="space-y-4">
                     <h3 className="text-lg font-bold font-poppins text-gray-800 dark:text-gray-200 mb-5 px-1">Previous Reports</h3>
 
-                    {[
-                        { id: "RPT-2026-001", title: "Liver Scan Analysis", date: "Feb 10, 2026", doctor: "Dr. A. Sharma", status: "Action Needed", statusColor: "yellow" },
-                        { id: "RPT-2026-002", title: "Liver Scan Analysis", date: "Jan 15, 2026", doctor: "AI Diagnosis", status: "Normal", statusColor: "green" },
-                    ].map((r) => (
-                        <div key={r.id} className="bg-white/60 dark:bg-slate-900/50 backdrop-blur-xl border border-white/80 dark:border-slate-700 rounded-[2rem] p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-50 dark:hover:shadow-none transition-all duration-200">
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${r.statusColor === "yellow" ? "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
-                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                            </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-0.5">
-                                    <h4 className="font-bold text-gray-900 dark:text-white font-poppins">{r.title}</h4>
-                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${r.statusColor === "yellow"
-                                        ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
-                                        : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"}`}>
-                                        {r.status}
-                                    </span>
-                                </div>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm font-barlow">{r.date} · {r.doctor}</p>
-                            </div>
-                            <div className="flex gap-2.5 flex-wrap">
-                                <a href={`/dashboard/report/${r.id}`} className="px-4 py-2 rounded-full border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-bold text-xs hover:bg-gray-50 dark:hover:bg-slate-700 transition font-poppins">View Report</a>
-                                <button onClick={() => setActiveTab("new")} className="px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 font-bold text-xs hover:bg-cyan-200 dark:hover:bg-cyan-900/50 transition font-poppins">Re-Analyze</button>
-                            </div>
+                    {loadingHistory ? (
+                        <div className="text-center py-10">
+                            <div className="w-8 h-8 border-4 border-cyan-200 border-t-cyan-600 rounded-full animate-spin mx-auto"></div>
+                            <p className="mt-3 text-sm text-gray-500">Loading your history...</p>
                         </div>
-                    ))}
+                    ) : recordsHistory.length === 0 ? (
+                        <div className="text-center py-10 text-gray-500 bg-white/50 dark:bg-slate-800/50 rounded-2xl border border-gray-100 dark:border-slate-700">
+                            <p>No past reports found.</p>
+                        </div>
+                    ) : (
+                        recordsHistory.map((r) => {
+                            const isAbnormal = r.prediction === 1;
+                            const statusLabel = isAbnormal ? "Action Needed" : "Normal";
+                            const statusColor = isAbnormal ? "yellow" : "green";
+                            const dateStr = new Date(r.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" });
+                            const handleViewHistory = () => {
+                                setFormData({
+                                    Age: r.age?.toString() || "",
+                                    Gender: r.gender || "",
+                                    TB: r.tb?.toString() || "",
+                                    DB: r.db?.toString() || "",
+                                    Alkphos: r.alkphos?.toString() || "",
+                                    Sgpt: r.sgpt?.toString() || "",
+                                    Sgot: r.sgot?.toString() || "",
+                                    TP: r.tp?.toString() || "",
+                                    ALB: r.alb?.toString() || "",
+                                    AG_Ratio: r.agRatio?.toString() || "",
+                                });
+                                setResult({
+                                    prediction: r.prediction,
+                                    confidence_score: r.confidence,
+                                    status: "success",
+                                    message: r.prediction === 1 ? "The analysis indicates abnormalities suggesting liver disease." : "Your biomarker levels appear within normal range."
+                                });
+                                setStep("result");
+                                setActiveTab("new");
+                            };
+
+                            return (
+                            <div key={r.id} className="bg-white/60 dark:bg-slate-900/50 backdrop-blur-xl border border-white/80 dark:border-slate-700 rounded-[2rem] p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-50 dark:hover:shadow-none transition-all duration-200">
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${statusColor === "yellow" ? "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400" : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`}>
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-0.5">
+                                        <h4 className="font-bold text-gray-900 dark:text-white font-poppins">Liver Scan Analysis</h4>
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${statusColor === "yellow"
+                                            ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400"
+                                            : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"}`}>
+                                            {statusLabel}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm font-barlow">{dateStr} · AI Diagnosis ({r.confidence?.toFixed(0) || 0}%)</p>
+                                </div>
+                                <div className="flex gap-2.5 flex-wrap">
+                                    <button onClick={handleViewHistory} className="px-4 py-2 rounded-full bg-cyan-600 text-white font-bold text-xs hover:bg-cyan-700 transition font-poppins">View Details</button>
+                                    <button onClick={() => handleDeleteRecord(r.id)} className="px-4 py-2 rounded-full border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 font-bold text-xs hover:bg-red-50 dark:hover:bg-red-900/20 transition font-poppins">Delete</button>
+                                </div>
+                            </div>
+                        )})
+
+                    )}
                 </div>
             )}
         </main>

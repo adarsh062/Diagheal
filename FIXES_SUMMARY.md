@@ -27,3 +27,6 @@
 
 ## 🚀 Status
 The application is now stable, crash-free, and features a more robust and interactive dashboard layout.
+
+python -m uvicorn main:app --reload   ai-engine
+docker-compose up -d           diagheal/

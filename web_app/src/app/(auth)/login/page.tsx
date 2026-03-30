@@ -5,10 +5,17 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import GoogleButton from "@/components/ui/GoogleButton";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/");
+    }
+  }, [isLoggedIn, router]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,15 +63,6 @@ export default function LoginPage() {
             Get AI-powered analysis of your medical reports in seconds. Trusted by thousands for accurate, instant health insights.
           </p>
           <div className="flex items-center gap-4">
-            <div className="flex -space-x-3">
-              {["https://randomuser.me/api/portraits/women/44.jpg", "https://randomuser.me/api/portraits/men/32.jpg", "https://randomuser.me/api/portraits/women/68.jpg"].map((src, i) => (
-                <img key={i} src={src} alt="" className="w-10 h-10 rounded-full border-2 border-white object-cover" />
-              ))}
-            </div>
-            <div>
-              <p className="text-sm font-bold">10,000+ Users</p>
-              <p className="text-xs text-cyan-200">Trust DiagHeal for reports</p>
-            </div>
           </div>
         </div>
       </div>

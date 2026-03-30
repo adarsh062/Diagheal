@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
-import StatsCard from "@/components/features/StatsCard";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
@@ -36,51 +38,71 @@ export default function Home() {
       {/* ── Floating Medical Particles ── */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Molecule cross */}
-        <div className="medical-particle-1 absolute top-[15%] right-[8%] w-8 h-8 opacity-20 dark:opacity-10">
+        <motion.div 
+          animate={{ rotate: 360, y: [-10, 10, -10] }} 
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="medical-particle-1 absolute top-[15%] right-[8%] w-8 h-8 opacity-20 dark:opacity-10"
+        >
           <svg viewBox="0 0 32 32" fill="none" stroke="#06b6d4" strokeWidth="2">
-            <circle cx="16" cy="16" r="4" fill="#06b6d4" fillOpacity="0.3"/>
-            <circle cx="4" cy="16" r="2.5" fill="#06b6d4" fillOpacity="0.2"/>
-            <circle cx="28" cy="16" r="2.5" fill="#06b6d4" fillOpacity="0.2"/>
-            <circle cx="16" cy="4" r="2.5" fill="#06b6d4" fillOpacity="0.2"/>
-            <circle cx="16" cy="28" r="2.5" fill="#06b6d4" fillOpacity="0.2"/>
-            <line x1="6.5" y1="16" x2="12" y2="16"/>
-            <line x1="20" y1="16" x2="25.5" y2="16"/>
-            <line x1="16" y1="6.5" x2="16" y2="12"/>
-            <line x1="16" y1="20" x2="16" y2="25.5"/>
+            <circle cx="16" cy="16" r="4" fill="#06b6d4" fillOpacity="0.3" />
+            <circle cx="4" cy="16" r="2.5" fill="#06b6d4" fillOpacity="0.2" />
+            <circle cx="28" cy="16" r="2.5" fill="#06b6d4" fillOpacity="0.2" />
+            <circle cx="16" cy="4" r="2.5" fill="#06b6d4" fillOpacity="0.2" />
+            <circle cx="16" cy="28" r="2.5" fill="#06b6d4" fillOpacity="0.2" />
+            <line x1="6.5" y1="16" x2="12" y2="16" />
+            <line x1="20" y1="16" x2="25.5" y2="16" />
+            <line x1="16" y1="6.5" x2="16" y2="12" />
+            <line x1="16" y1="20" x2="16" y2="25.5" />
           </svg>
-        </div>
+        </motion.div>
         {/* DNA */}
-        <div className="medical-particle-2 absolute top-[60%] left-[5%] w-10 h-10 opacity-15 dark:opacity-8">
+        <motion.div 
+          animate={{ y: [-20, 20, -20], rotate: [-10, 10, -10] }} 
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="medical-particle-2 absolute top-[60%] left-[5%] w-10 h-10 opacity-15 dark:opacity-8"
+        >
           <svg viewBox="0 0 40 40" fill="none" stroke="#14b8a6" strokeWidth="1.5">
-            <path d="M10 5 Q20 15 10 25 Q20 35 10 45" strokeLinecap="round"/>
-            <path d="M30 5 Q20 15 30 25 Q20 35 30 45" strokeLinecap="round"/>
-            <line x1="13" y1="10" x2="27" y2="10" strokeOpacity="0.6"/>
-            <line x1="11" y1="18" x2="29" y2="18" strokeOpacity="0.6"/>
-            <line x1="13" y1="26" x2="27" y2="26" strokeOpacity="0.6"/>
+            <path d="M10 5 Q20 15 10 25 Q20 35 10 45" strokeLinecap="round" />
+            <path d="M30 5 Q20 15 30 25 Q20 35 30 45" strokeLinecap="round" />
+            <line x1="13" y1="10" x2="27" y2="10" strokeOpacity="0.6" />
+            <line x1="11" y1="18" x2="29" y2="18" strokeOpacity="0.6" />
+            <line x1="13" y1="26" x2="27" y2="26" strokeOpacity="0.6" />
           </svg>
-        </div>
+        </motion.div>
         {/* Plus sign */}
-        <div className="medical-particle-3 absolute top-[25%] left-[12%] w-6 h-6 opacity-20 dark:opacity-10">
+        <motion.div 
+          animate={{ rotateY: [0, 360], scale: [0.8, 1.2, 0.8] }} 
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="medical-particle-3 absolute top-[25%] left-[12%] w-6 h-6 opacity-20 dark:opacity-10"
+        >
           <svg viewBox="0 0 24 24" fill="#06b6d4">
-            <rect x="10" y="3" width="4" height="18" rx="2"/>
-            <rect x="3" y="10" width="18" height="4" rx="2"/>
+            <rect x="10" y="3" width="4" height="18" rx="2" />
+            <rect x="3" y="10" width="18" height="4" rx="2" />
           </svg>
-        </div>
+        </motion.div>
         {/* Atom ring */}
-        <div className="medical-particle-4 absolute bottom-[20%] right-[12%] w-12 h-12 opacity-10 dark:opacity-5">
+        <motion.div 
+          animate={{ rotateZ: 360 }} 
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="medical-particle-4 absolute bottom-[20%] right-[12%] w-12 h-12 opacity-10 dark:opacity-5"
+        >
           <svg viewBox="0 0 48 48" fill="none" stroke="#0891b2" strokeWidth="1.5">
-            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(0 24 24)"/>
-            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(60 24 24)"/>
-            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(120 24 24)"/>
-            <circle cx="24" cy="24" r="3" fill="#0891b2"/>
+            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(0 24 24)" />
+            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(60 24 24)" />
+            <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(120 24 24)" />
+            <circle cx="24" cy="24" r="3" fill="#0891b2" />
           </svg>
-        </div>
+        </motion.div>
         {/* Heartbeat dot */}
-        <div className="medical-particle-5 absolute top-[70%] right-[20%] w-5 h-5 opacity-25 dark:opacity-12">
+        <motion.div 
+          animate={{ scale: [1, 1.4, 1], opacity: [0.3, 1, 0.3] }} 
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="medical-particle-5 absolute top-[70%] right-[20%] w-5 h-5 opacity-25 dark:opacity-12"
+        >
           <svg viewBox="0 0 20 20" fill="#06b6d4">
-            <path d="M10 17.5 L2.5 10 A5 5 0 0 1 10 2.5 A5 5 0 0 1 17.5 10Z"/>
+            <path d="M10 17.5 L2.5 10 A5 5 0 0 1 10 2.5 A5 5 0 0 1 17.5 10Z" />
           </svg>
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Floating Glow Orbs ── */}
@@ -89,8 +111,13 @@ export default function Home() {
       <div className="orb-c absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-teal-300 blur-[120px] opacity-10 dark:opacity-5 rounded-full pointer-events-none z-0" />
 
       {/* ── HERO SECTION ── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 pt-28 md:pt-40 flex flex-col lg:flex-row items-center justify-between gap-10 pb-4">
-        <div className="lg:w-[58%] space-y-5 relative z-20 text-center lg:text-left">
+      <section className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 pt-28 md:pt-40 flex flex-col lg:flex-row items-center justify-between gap-10 pb-4 overflow-hidden">
+        <motion.div 
+           initial={{ opacity: 0, x: -60 }}
+           animate={{ opacity: 1, x: 0 }}
+           transition={{ duration: 1, ease: "easeOut" }}
+           className="lg:w-[58%] space-y-5 relative z-20 text-center lg:text-left"
+        >
           <p className="hero-tag text-gray-600 dark:text-cyan-400 font-poppins tracking-[2px] uppercase text-xs font-semibold">
             AI-powered health insights for better living.
           </p>
@@ -104,26 +131,62 @@ export default function Home() {
             <Link href="/dashboard">
               <Button variant="primary">Check Your Report</Button>
             </Link>
-            <Link href="/trial">
-              <Button variant="outline">Get Your Free Trial</Button>
-            </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* Hero Image */}
-        <div className="hero-image lg:w-1/2 relative mt-6 lg:mt-0 flex justify-center lg:justify-end w-full">
-          <div className="relative w-[280px] h-[320px] sm:w-[360px] sm:h-[400px] md:w-[420px] md:h-[470px] flex justify-center items-center">
-            <div className="absolute inset-0 bg-white/60 dark:bg-slate-800/40 backdrop-blur-3xl z-0 scale-75 rotate-[12deg]"
-              style={{ borderRadius: "40% 40% 70% 30% / 60% 40% 60% 30%" }} />
-            <Image src="/assets/hero-image.png" alt="Medical Analysis" fill className="object-contain z-10 relative drop-shadow-2xl" priority />
-          </div>
-        </div>
-      </section>
+        <motion.div 
+           initial={{ opacity: 0, x: 60, rotateY: -15, scale: 0.9 }}
+           animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1 }}
+           transition={{ duration: 1, ease: "easeOut" }}
+           className="hero-image lg:w-1/2 relative mt-6 lg:mt-0 flex justify-center lg:justify-end w-full"
+           style={{ perspective: 1200 }}
+        >
+          <div className="relative w-[280px] h-[320px] sm:w-[360px] sm:h-[400px] md:w-[420px] md:h-[470px] flex justify-center items-center" style={{ transformStyle: "preserve-3d" }}>
+            
+             {/* ── 3D Medical Animations Behind Image ── */}
+             
+             {/* Orbital Ring 1 */}
+             <motion.div 
+               className="absolute w-[110%] h-[110%] rounded-full border-2 border-cyan-400/30 dark:border-cyan-500/40 border-dashed z-0 pointer-events-none"
+               animate={{ rotateX: [0, 360], rotateY: [0, 180], rotateZ: [0, 360] }}
+               transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+               style={{ transformStyle: "preserve-3d" }}
+             />
+             
+             {/* Orbital Ring 2 */}
+             <motion.div 
+               className="absolute w-[90%] h-[90%] rounded-full border-2 border-teal-300/40 dark:border-teal-400/30 z-0 pointer-events-none"
+               animate={{ rotateX: [360, 0], rotateY: [180, 0], rotateZ: [360, 0] }}
+               transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+               style={{ transformStyle: "preserve-3d" }}
+             />
 
-      {/* Stats Card */}
-      <div className="hero-card">
-        <StatsCard />
-      </div>
+             {/* Floating 3D Medical Crosses */}
+             <motion.div 
+               className="absolute top-[0%] left-[0%] text-cyan-500/50 z-0 pointer-events-none"
+               animate={{ rotateY: [0, 360], rotateX: [0, 360], y: [-20, 20, -20] }}
+               transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+             >
+               <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2v9H2v2h9v9h2v-9h9v-2h-9V2z"/></svg>
+             </motion.div>
+
+             <motion.div 
+               className="absolute bottom-[5%] right-[-5%] text-teal-500/50 z-0 pointer-events-none"
+               animate={{ rotateX: [0, 360], rotateY: [0, 360], y: [20, -20, 20] }}
+               transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+             >
+               <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2v9H2v2h9v9h2v-9h9v-2h-9V2z"/></svg>
+             </motion.div>
+
+             {/* Pulsing Core Organ/Blob */}
+             <div className="absolute inset-0 bg-white/60 dark:bg-slate-800/40 backdrop-blur-3xl z-0 scale-75 rotate-[12deg] animate-[spin_15s_linear_infinite]"
+               style={{ borderRadius: "40% 40% 70% 30% / 60% 40% 60% 30%" }} />
+
+             <Image src="/assets/hero-image.png" alt="Medical Analysis" fill className="object-contain z-10 relative drop-shadow-[0_20px_50px_rgba(6,182,212,0.3)] dark:drop-shadow-[0_20px_50px_rgba(6,182,212,0.15)]" priority />
+          </div>
+        </motion.div>
+      </section>
 
       {/* ── HOW IT WORKS ── */}
       <section className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-20 md:py-28">
@@ -157,10 +220,14 @@ export default function Home() {
               icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />,
             },
           ].map((step, i) => (
-            <div
+            <motion.div
               key={step.title}
+              initial={{ opacity: 0, rotateX: 30, y: 70, scale: 0.9 }}
+              whileInView={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
               className="group relative bg-white/40 dark:bg-slate-900/50 backdrop-blur-xl border border-white/50 dark:border-white/10 p-7 sm:p-8 rounded-[2.5rem] hover:-translate-y-2 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-100/40 dark:hover:shadow-none overflow-hidden"
-              style={{ animationDelay: `${i * 0.1}s` }}
+              style={{ transformStyle: "preserve-3d", perspective: 1000 }}
             >
               {/* Step Number watermark */}
               <span className="absolute top-4 right-6 text-7xl font-poppins font-bold text-gray-100 dark:text-white/5 select-none leading-none">{step.num}</span>
@@ -169,7 +236,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold font-poppins text-gray-900 dark:text-white mb-2">{step.title}</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed font-barlow">{step.desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -179,10 +246,10 @@ export default function Home() {
         {/* Subtle medical bg decoration */}
         <div className="dna-helix absolute right-0 top-0 w-64 h-full pointer-events-none overflow-hidden">
           <svg viewBox="0 0 260 600" className="h-full w-full opacity-5 dark:opacity-[0.03]" fill="none" stroke="#06b6d4" strokeWidth="2">
-            <path d="M130 0 Q80 50 130 100 Q180 150 130 200 Q80 250 130 300 Q180 350 130 400 Q80 450 130 500 Q180 550 130 600"/>
-            <path d="M130 0 Q180 50 130 100 Q80 150 130 200 Q180 250 130 300 Q80 350 130 400 Q180 450 130 500 Q80 550 130 600"/>
-            {[0,1,2,3,4,5].map(i => (
-              <line key={i} x1="80" y1={100*i+50} x2="180" y2={100*i+50} strokeOpacity="0.5"/>
+            <path d="M130 0 Q80 50 130 100 Q180 150 130 200 Q80 250 130 300 Q180 350 130 400 Q80 450 130 500 Q180 550 130 600" />
+            <path d="M130 0 Q180 50 130 100 Q80 150 130 200 Q180 250 130 300 Q80 350 130 400 Q180 450 130 500 Q80 550 130 600" />
+            {[0, 1, 2, 3, 4, 5].map(i => (
+              <line key={i} x1="80" y1={100 * i + 50} x2="180" y2={100 * i + 50} strokeOpacity="0.5" />
             ))}
           </svg>
         </div>
@@ -200,15 +267,19 @@ export default function Home() {
             { icon: "📱", title: "Works Everywhere", desc: "Fully responsive across mobile, tablet, and desktop devices." },
             { icon: "🩺", title: "Doctor Referral", desc: "Get matched with verified specialists near you after your diagnosis." },
           ].map((f, i) => (
-            <div
+            <motion.div
               key={f.title}
+              initial={{ opacity: 0, rotateY: 45, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, rotateY: 0, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
               className="bg-white/50 dark:bg-slate-900/40 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-3xl p-6 hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-50 dark:hover:shadow-none transition-all duration-300"
-              style={{ animationDelay: `${i * 0.08}s` }}
+              style={{ transformStyle: "preserve-3d", perspective: 1000 }}
             >
               <span className="text-3xl mb-4 block">{f.icon}</span>
               <h4 className="font-poppins font-bold text-gray-900 dark:text-white mb-2 text-base">{f.title}</h4>
               <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-barlow">{f.desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -240,15 +311,20 @@ export default function Home() {
               rating: 5,
             },
           ].map((t, i) => (
-            <div
+            <motion.div
               key={i}
+              initial={{ opacity: 0, rotateX: -20, y: 50 }}
+              whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
               className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-[2rem] p-7 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              style={{ transformStyle: "preserve-3d", perspective: 1000 }}
             >
               {/* Stars */}
               <div className="flex gap-0.5 mb-4">
                 {Array(t.rating).fill(0).map((_, si) => (
                   <svg key={si} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}
               </div>
@@ -262,14 +338,20 @@ export default function Home() {
                   <p className="text-xs text-gray-500 dark:text-gray-400 font-barlow">{t.role}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── CTA BANNER ── */}
       <section className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 pb-20 md:pb-28">
-        <div className="relative rounded-[2.5rem] bg-gradient-to-br from-cyan-600 via-teal-600 to-cyan-700 p-10 md:p-14 overflow-hidden text-white text-center">
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.95, y: 40 }}
+           whileInView={{ opacity: 1, scale: 1, y: 0 }}
+           viewport={{ once: true, margin: "-50px" }}
+           transition={{ duration: 0.7, ease: "easeOut" }}
+           className="relative rounded-[2.5rem] bg-gradient-to-br from-cyan-600 via-teal-600 to-cyan-700 p-10 md:p-14 overflow-hidden text-white text-center shadow-[0_20px_50px_rgba(6,182,212,0.3)] dark:shadow-none"
+        >
           {/* Decorative blobs */}
           <div className="absolute -top-12 -left-12 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-black/10 rounded-full blur-3xl" />
@@ -277,7 +359,7 @@ export default function Home() {
           <div className="absolute inset-0 opacity-10">
             <svg viewBox="0 0 600 80" className="w-full h-full" preserveAspectRatio="none">
               <polyline points="0,40 80,40 100,40 110,15 125,65 135,5 145,75 155,40 240,40 280,40 295,25 310,55 325,40 400,40 450,40 465,20 480,60 495,40 600,40"
-                fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </div>
           <div className="relative z-10">
@@ -292,7 +374,7 @@ export default function Home() {
               </button>
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── FOOTER ── */}

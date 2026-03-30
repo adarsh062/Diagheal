@@ -1,8 +1,9 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { useSession, signIn, signOut, SessionProvider } from "next-auth/react";
 
 // ── Types ──────────────────────────────────────────────────────────────────
-type User = { name: string; email: string; plan: "free" | "pro" };
+type User = { id: string; name: string; email: string; plan?: "free" | "pro" };
 type AuthContextType = {
     user: User | null;
     isLoggedIn: boolean;
@@ -12,42 +13,40 @@ type AuthContextType = {
     freeReportsUsed: number;
     incrementFreeReports: () => void;
     canAnalyze: boolean; // true if logged in OR has free quota left
+    status: "loading" | "authenticated" | "unauthenticated";
 };
 
 const FREE_LIMIT = 3;
-const STORAGE_KEY = "diagheal_user";
 const FREE_REPORTS_KEY = "diagheal_free_reports";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+function AuthProviderContent({ children }: { children: React.ReactNode }) {
+    const { data: session, status } = useSession();
     const [freeReportsUsed, setFreeReportsUsed] = useState(0);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        // Restore user session
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) setUser(JSON.parse(stored));
             const freeUsed = parseInt(localStorage.getItem(FREE_REPORTS_KEY) ?? "0", 10);
             setFreeReportsUsed(freeUsed);
         } catch { /* ignore */ }
     }, []);
 
     const login = useCallback(async (email: string, password: string) => {
-        // Simulate API – accept any non-empty credentials
         if (!email || !password) return { success: false, error: "Please fill in all fields." };
         if (password.length < 6) return { success: false, error: "Password must be at least 6 characters." };
 
-        const userData: User = {
-            name: email.split("@")[0].replace(/[._]/g, " "),
+        const res = await signIn("credentials", {
+            redirect: false,
             email,
-            plan: "free",
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-        setUser(userData);
+            password
+        });
+
+        if (res?.error) {
+            return { success: false, error: "Invalid email or password" };
+        }
         return { success: true };
     }, []);
 
@@ -55,15 +54,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!name || !email || !password) return { success: false, error: "Please fill in all fields." };
         if (password.length < 6) return { success: false, error: "Password must be at least 6 characters." };
 
-        const userData: User = { name, email, plan: "free" };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-        setUser(userData);
-        return { success: true };
-    }, []);
+        try {
+            const response = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password }),
+            });
+            const data = await response.json();
+            
+            if (!response.ok) {
+                return { success: false, error: data.error || "Signup failed" };
+            }
+            
+            // Automatically sign in after signup
+            return login(email, password);
+        } catch (error) {
+            return { success: false, error: "Network error occurred." };
+        }
+    }, [login]);
 
     const logout = useCallback(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setUser(null);
+        signOut({ callbackUrl: "/" });
     }, []);
 
     const incrementFreeReports = useCallback(() => {
@@ -72,14 +83,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(FREE_REPORTS_KEY, String(next));
     }, [freeReportsUsed]);
 
-    const canAnalyze = !!user || freeReportsUsed < FREE_LIMIT;
+    const mappedUser = session?.user ? { 
+        id: session.user.id || "",
+        name: session.user.name || "", 
+        email: session.user.email || "", 
+        plan: "free" as const 
+    } : null;
+
+    const canAnalyze = status === "authenticated" || freeReportsUsed < FREE_LIMIT;
 
     if (!mounted) return null; // avoid hydration mismatch
 
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, signup, logout, freeReportsUsed, incrementFreeReports, canAnalyze }}>
+        <AuthContext.Provider value={{ 
+            user: mappedUser, 
+            isLoggedIn: status === "authenticated", 
+            login, 
+            signup, 
+            logout, 
+            freeReportsUsed, 
+            incrementFreeReports, 
+            canAnalyze,
+            status
+        }}>
             {children}
         </AuthContext.Provider>
+    );
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+    return (
+        <SessionProvider>
+            <AuthProviderContent>{children}</AuthProviderContent>
+        </SessionProvider>
     );
 }
 

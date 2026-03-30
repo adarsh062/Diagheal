@@ -5,10 +5,17 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import GoogleButton from "@/components/ui/GoogleButton";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useEffect } from "react";
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signup } = useAuth();
+  const { signup, isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/");
+    }
+  }, [isLoggedIn, router]);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,7 +63,7 @@ export default function SignupPage() {
             Start Your<br />Health Journey.
           </h2>
           <p className="text-cyan-100 font-barlow text-base leading-relaxed mb-8">
-            Join thousands of users who already trust DiagHeal for AI-powered medical report analysis. Your first 3 reports are on us.
+            Join DiagHeal today for accurate medical report analysis. Your first 3 reports are on us.
           </p>
           {/* Feature pills */}
           <div className="flex flex-wrap gap-2">
