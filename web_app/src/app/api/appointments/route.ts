@@ -1,11 +1,19 @@
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs"; // ✅ important for Prisma
+export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
+// Helper to check if we are in the build phase
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL;
+
 export async function GET() {
+  // Step 1: Build-time protection
+  if (isBuildPhase) {
+    return NextResponse.json([]);
+  }
+
   try {
     const session = await auth();
 
@@ -29,6 +37,11 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Step 1: Build-time protection
+  if (isBuildPhase) {
+    return NextResponse.json({ message: "Build skipped" });
+  }
+
   try {
     const session = await auth();
 
