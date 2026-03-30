@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 
