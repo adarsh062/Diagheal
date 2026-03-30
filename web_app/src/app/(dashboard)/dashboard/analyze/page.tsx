@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 
 const organs = [
@@ -208,3 +209,4 @@ export default function AnalyzeHubPage() {
         </main>
     );
 }
+
