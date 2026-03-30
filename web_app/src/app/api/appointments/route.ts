@@ -5,18 +5,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
-// Helper to check if we are in the build phase
-const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL;
+// Zyada robust check
+const isBuildPhase = 
+  process.env.NEXT_PHASE === 'phase-production-build' || 
+  process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL;
 
 export async function GET() {
-  // Step 1: Build-time protection
+  // Build time protection: Prisma initialize hone se pehle return kar do
   if (isBuildPhase) {
-    return NextResponse.json([]);
+    return NextResponse.json([], { status: 200 });
   }
 
   try {
     const session = await auth();
-
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -29,41 +30,26 @@ export async function GET() {
     return NextResponse.json(appointments);
   } catch (error) {
     console.error("GET appointments error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch appointments" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
-  // Step 1: Build-time protection
   if (isBuildPhase) {
-    return NextResponse.json({ message: "Build skipped" });
+    return NextResponse.json({ message: "Build skipped" }, { status: 200 });
   }
 
   try {
     const session = await auth();
-
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-
-    const {
-      doctorName,
-      specialty,
-      hospital,
-      date,
-      timeSlot,
-    } = body;
+    const { doctorName, specialty, hospital, date, timeSlot } = body;
 
     if (!doctorName || !date || !timeSlot) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
     const appointment = await prisma.appointment.create({
@@ -79,10 +65,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(appointment);
   } catch (error) {
-    console.error("POST appointment error:", error);
-    return NextResponse.json(
-      { error: "Failed to create appointment" },
-      { status: 500 }
-    );
+    console.error("POST error:", error);
+    return NextResponse.json({ error: "Failed to create" }, { status: 500 });
   }
 }
