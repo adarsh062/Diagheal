@@ -3,17 +3,11 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import prisma from "@/lib/prisma";
-
-// Zyada robust check
-const isBuildPhase = 
-  process.env.NEXT_PHASE === 'phase-production-build' || 
-  process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL;
 
 export async function GET() {
-  // Build time protection: Prisma initialize hone se pehle return kar do
-  if (isBuildPhase) {
-    return NextResponse.json([], { status: 200 });
+  // 1. Build phase check (Sabse upar)
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.json([]);
   }
 
   try {
@@ -21,6 +15,9 @@ export async function GET() {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // 2. LAZY IMPORT: Prisma ko sirf yahan load karo
+    const { default: prisma } = await import("@/lib/prisma");
 
     const appointments = await prisma.appointment.findMany({
       where: { userId: session.user.id },
@@ -35,8 +32,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (isBuildPhase) {
-    return NextResponse.json({ message: "Build skipped" }, { status: 200 });
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.json({ message: "Build skipped" });
   }
 
   try {
@@ -45,27 +42,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { default: prisma } = await import("@/lib/prisma");
     const body = await req.json();
-    const { doctorName, specialty, hospital, date, timeSlot } = body;
-
-    if (!doctorName || !date || !timeSlot) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-    }
 
     const appointment = await prisma.appointment.create({
       data: {
-        doctorName,
-        specialty,
-        hospital,
-        date: new Date(date),
-        timeSlot,
+        doctorName: body.doctorName,
+        specialty: body.specialty,
+        hospital: body.hospital,
+        date: new Date(body.date),
+        timeSlot: body.timeSlot,
         userId: session.user.id,
       },
     });
 
     return NextResponse.json(appointment);
   } catch (error) {
-    console.error("POST error:", error);
     return NextResponse.json({ error: "Failed to create" }, { status: 500 });
   }
 }
