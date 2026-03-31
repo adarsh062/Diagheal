@@ -381,7 +381,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
             <Image src="/assets/logo.png" alt="DiagHeal" width={96} height={28} className="object-contain opacity-80 dark:brightness-0 dark:invert" />
-            <span className="text-gray-400 dark:text-gray-500 text-sm">© 2026 DiagHeal Inc.</span>
+            <span className="text-gray-400 dark:text-gray-500 text-sm">© 2026 DiagHeal</span>
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-sm font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase">
             <Link href="#" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">Privacy</Link>

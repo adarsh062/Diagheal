@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
+import ReportPrintControls from "@/components/features/dashboard/ReportPrintControls";
 
 interface PageProps {
   params: { id: string };
@@ -79,7 +80,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
     <main className="w-full">
       <header className="mb-7 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <nav className="flex items-center gap-1.5 text-xs text-gray-400 mb-2 font-barlow">
+          <nav className="flex items-center gap-1.5 text-xs text-gray-400 mb-2 font-barlow no-print">
             <Link href="/dashboard" className="hover:text-cyan-600 transition-colors">Dashboard</Link>
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5l7 7-7 7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/></svg>
             <Link href="/dashboard/history" className="hover:text-cyan-600 transition-colors">History</Link>
@@ -89,18 +90,12 @@ export default async function ReportDetailPage({ params }: PageProps) {
           <h1 className="text-2xl md:text-3xl font-poppins font-semibold text-black dark:text-white">Liver Analysis Result</h1>
           <p className="text-sm text-gray-500 font-barlow mt-0.5">Generated on {dateStr} · ID: {record.id}</p>
         </div>
-        <div className="flex gap-2.5 flex-wrap no-print">
-          <Link href="/dashboard/analyze/liver" 
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm shadow-lg shadow-cyan-200/50 transition">
-             New Analysis
-          </Link>
-        </div>
+        <ReportPrintControls />
       </header>
 
       <div className="grid lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2 space-y-5">
-          {/* Result Card */}
-          <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2rem] p-8">
+          <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2rem] p-8 transition-colors">
              <div className="flex flex-col sm:flex-row items-center gap-8">
                 <div className="flex-1 text-center sm:text-left">
                     <span className={`inline-flex px-3 py-1.5 rounded-full text-xs font-bold mb-3 border ${statusStyle}`}>
@@ -117,8 +112,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
              </div>
           </div>
 
-          {/* Details Table */}
-          <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2rem] p-8">
+          <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2rem] p-8 transition-colors">
             <h3 className="text-lg font-bold font-poppins mb-6">Biomarker Details</h3>
             <div className="overflow-x-auto">
                 <table className="w-full text-left">
@@ -132,7 +126,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
                     </thead>
                     <tbody className="font-barlow">
                         {findingsWithStatus.map((f, i) => (
-                            <tr key={i} className="border-b border-gray-50 last:border-0">
+                            <tr key={i} className="border-b border-gray-50 dark:border-white/5 last:border-0 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                                 <td className="py-4 font-semibold text-gray-800 dark:text-gray-200">{f.name}</td>
                                 <td className="py-4 font-bold text-cyan-600">{f.value}</td>
                                 <td className="py-4 text-xs text-gray-400">{f.range}</td>
@@ -152,39 +146,27 @@ export default async function ReportDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-5">
-           <div className="bg-cyan-600 text-white rounded-[2.5rem] p-7 shadow-xl shadow-cyan-100">
+           <div className="bg-slate-950 text-white rounded-[2.5rem] p-8 shadow-xl">
                 <h3 className="text-lg font-bold font-poppins mb-4 flex items-center gap-2">
-                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                   <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                    Next Steps
                 </h3>
                 <ul className="space-y-4">
                     {recommendations.map((rec, i) => (
-                        <li key={i} className="flex gap-3 text-sm font-barlow leading-relaxed">
-                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-300 shrink-0" />
+                        <li key={i} className="flex gap-3 text-sm font-barlow leading-relaxed opacity-80">
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0" />
                             {rec}
                         </li>
                     ))}
                 </ul>
            </div>
 
-           <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2.5rem] p-7">
-                <h3 className="font-bold font-poppins text-gray-800 dark:text-white mb-4">Patient Info</h3>
-                <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Age:</span>
-                        <span className="font-bold">{record.age ? `${record.age} years` : "N/A"}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Gender:</span>
-                        <span className="font-bold">{record.gender || "N/A"}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Record Type:</span>
-                        <span className="font-bold text-cyan-600">{record.type}</span>
-                    </div>
-                </div>
+           <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2.5rem] p-8 transition-colors">
+                <h3 className="font-bold font-poppins text-gray-800 dark:text-white mb-4">Summary</h3>
+                <p className="text-sm font-barlow leading-relaxed text-gray-500 dark:text-gray-400 italic">
+                    "{summary}"
+                </p>
            </div>
         </div>
       </div>
