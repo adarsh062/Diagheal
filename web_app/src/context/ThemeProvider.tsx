@@ -12,38 +12,21 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>("light");
+    const [theme] = useState<Theme>("light");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        // 1. Check local storage
-        const storedTheme = localStorage.getItem("diagheal-theme") as Theme | null;
-        if (storedTheme) {
-            setTheme(storedTheme);
-        } else {
-            // 2. Check system preference
-            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-            setTheme(systemTheme);
-        }
     }, []);
 
     useEffect(() => {
         if (!mounted) return;
-
         const root = window.document.documentElement;
-        if (theme === "dark") {
-            root.classList.add("dark");
-        } else {
-            root.classList.remove("dark");
-        }
-        localStorage.setItem("diagheal-theme", theme);
-    }, [theme, mounted]);
+        root.classList.remove("dark");
+    }, [mounted]);
 
     const toggleTheme = () => {
-        setTheme((prev) => (prev === "light" ? "dark" : "light"));
+        // Theme switching is disabled as requested
     };
 
 

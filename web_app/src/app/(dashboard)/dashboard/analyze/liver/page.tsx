@@ -509,8 +509,8 @@ export default function LiverAnalyzePage() {
                                         <div className="absolute inset-2 border-3 border-transparent border-t-teal-400 rounded-full animate-spin" style={{ animationDuration: "0.6s", animationDirection: "reverse" }} />
                                     </div>
                                     <h3 className="text-lg font-bold dark:text-white font-poppins mb-2">Reading Your Report...</h3>
-                                    <p className="text-gray-500 dark:text-gray-400 text-sm font-barlow">Gemini AI is extracting biomarker values</p>
-                                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1 font-barlow">This may take 10–20 seconds</p>
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm font-barlow">Our AI is extracting biomarker values</p>
+                                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1 font-barlow">This may take a few moments</p>
                                 </div>
                             )}
 
@@ -607,14 +607,14 @@ export default function LiverAnalyzePage() {
                                                         : isAbnormal
                                                             ? "bg-orange-200 dark:bg-red-900/50 text-orange-800 dark:text-orange-300"
                                                             : "bg-emerald-200 dark:bg-green-900/50 text-emerald-800 dark:text-emerald-300"}`}>
-                                                        {isError ? "Analysis Error" : isAbnormal ? "⚠ Signs of Liver Disease" : "✓ No Liver Disease Detected"}
+                                                        {isError ? "Analysis Error" : isAbnormal ? "Please Consult a Doctor" : "Consultation Not Required"}
                                                     </span>
                                                 </div>
                                                 <p className={`text-base font-barlow leading-relaxed ${isError ? "text-red-700 dark:text-red-300" : isAbnormal ? "text-orange-900 dark:text-orange-200" : "text-emerald-900 dark:text-emerald-200"}`}>
-                                                    {result.message || (isAbnormal
-                                                        ? "The analysis indicates abnormalities suggesting liver disease. Consult a healthcare professional promptly."
-                                                        : "Your biomarker levels appear within normal range. No liver disease detected."
-                                                    )}
+                                                    {isError ? "Our analysis system encountered an error. Please contact support or try again later." : isAbnormal
+                                                        ? "Our analysis suggests that you should visit a healthcare professional for a detailed consultation regarding your liver markers."
+                                                        : "Your biomarker levels are within the normal range. You do not need to consult a doctor at this time."
+                                                    }
                                                 </p>
                                                 <div className="flex items-center gap-2 mt-3 justify-center sm:justify-start">
                                                     <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -624,12 +624,7 @@ export default function LiverAnalyzePage() {
                                                 </div>
                                             </div>
 
-                                            {/* Confidence Gauge */}
-                                            {result.confidence_score != null && (
-                                                <div className="flex justify-center shrink-0">
-                                                    <ConfidenceGauge confidence={typeof result.confidence_score === "number" ? result.confidence_score : parseFloat(result.confidence_score)} isAbnormal={isAbnormal} />
-                                                </div>
-                                            )}
+
                                         </div>
                                     </div>
 

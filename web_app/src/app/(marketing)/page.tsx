@@ -139,7 +139,7 @@ export default function Home() {
            initial={{ opacity: 0, x: 60, rotateY: -15, scale: 0.9 }}
            animate={{ opacity: 1, x: 0, rotateY: 0, scale: 1 }}
            transition={{ duration: 1, ease: "easeOut" }}
-           className="hero-image lg:w-1/2 relative mt-6 lg:mt-0 flex justify-center lg:justify-end w-full"
+           className="hero-image lg:w-1/2 relative mt-6 lg:mt-0 hidden lg:flex justify-center lg:justify-end w-full"
            style={{ perspective: 1200 }}
         >
           <div className="relative w-[280px] h-[320px] sm:w-[360px] sm:h-[400px] md:w-[420px] md:h-[470px] flex justify-center items-center" style={{ transformStyle: "preserve-3d" }}>
@@ -209,7 +209,7 @@ export default function Home() {
               color: "teal",
               num: "02",
               title: "AI Analysis",
-              desc: "Gemini AI scans your biomarker values, compares them with medical standards, and detects anomalies.",
+              desc: "Our AI model scans your biomarker values, compares them with medical standards, and detects anomalies.",
               icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />,
             },
             {
@@ -262,7 +262,7 @@ export default function Home() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { icon: "🧬", title: "Gemini AI Vision", desc: "Auto-extracts biomarkers from scanned reports with high accuracy." },
+            { icon: "🧬", title: "AI Vision", desc: "Auto-extracts biomarkers from scanned reports with high accuracy." },
             { icon: "🔒", title: "Privacy First", desc: "Your health data stays yours. We never sell or share your reports." },
             { icon: "📱", title: "Works Everywhere", desc: "Fully responsive across mobile, tablet, and desktop devices." },
             { icon: "🩺", title: "Doctor Referral", desc: "Get matched with verified specialists near you after your diagnosis." },
@@ -293,21 +293,21 @@ export default function Home() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
-              quote: "DiagHeal detected my elevated SGPT levels before my doctor even reviewed the report. Incredible tool!",
-              name: "Rahul M.",
-              role: "Software Engineer, Pune",
+              quote: "The report analysis helped me identify potential liver concerns early. A very reliable companion for health tracking.",
+              name: "Adarsh M.",
+              role: "Verified User, Mumbai",
               rating: 5,
             },
             {
-              quote: "The AI extraction is surprisingly accurate. Saves me the trouble of manually entering all biomarker values.",
-              name: "Priya K.",
-              role: "Medical Student, AIIMS Bhopal",
+              quote: "Extremely accurate biomarker extraction. It saves me time and gives peace of mind with clear explanations.",
+              name: "Sneha K.",
+              role: "Verified User, Delhi",
               rating: 5,
             },
             {
-              quote: "Love the doctor recommendation feature. Booked an appointment within minutes of getting my results.",
-              name: "Sajan V.",
-              role: "Teacher, Bhopal",
+              quote: "Simple, fast, and very professional. The doctor consultation feature is a lifesaver for quick follow-ups.",
+              name: "Vikram S.",
+              role: "Verified User, Bangalore",
               rating: 5,
             },
           ].map((t, i) => (
@@ -317,10 +317,9 @@ export default function Home() {
               whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
-              className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-[2rem] p-7 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              className="bg-white/70 border border-gray-100 rounded-[2rem] p-7 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
               style={{ transformStyle: "preserve-3d", perspective: 1000 }}
             >
-              {/* Stars */}
               <div className="flex gap-0.5 mb-4">
                 {Array(t.rating).fill(0).map((_, si) => (
                   <svg key={si} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -328,14 +327,14 @@ export default function Home() {
                   </svg>
                 ))}
               </div>
-              <p className="text-gray-700 dark:text-gray-300 font-barlow text-sm leading-relaxed mb-5 italic">"{t.quote}"</p>
+              <p className="text-gray-700 font-barlow text-sm leading-relaxed mb-5 italic">"{t.quote}"</p>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center text-white font-bold text-xs font-poppins shrink-0">
                   {t.name[0]}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-800 dark:text-white text-sm font-poppins">{t.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 font-barlow">{t.role}</p>
+                  <p className="font-bold text-gray-800 text-sm font-poppins">{t.name}</p>
+                  <p className="text-xs text-gray-500 font-barlow">{t.role}</p>
                 </div>
               </div>
             </motion.div>

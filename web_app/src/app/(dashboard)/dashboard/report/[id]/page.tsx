@@ -29,7 +29,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
   });
 
   const isAbnormal = record.prediction === 1;
-  const statusLabel = isAbnormal ? "Anomaly Detected" : "Normal Level";
+  const statusLabel = isAbnormal ? "Consult Doctor" : "Healthy Level";
   const statusStyle = isAbnormal
     ? "bg-red-100 text-red-700 border-red-200"
     : "bg-green-100 text-green-700 border-green-200";
@@ -102,23 +102,17 @@ export default async function ReportDetailPage({ params }: PageProps) {
           {/* Result Card */}
           <div className="bg-white/70 dark:bg-slate-900 border border-white/80 dark:border-slate-700 rounded-[2rem] p-8">
              <div className="flex flex-col sm:flex-row items-center gap-8">
-                <div className="relative w-32 h-32 flex items-center justify-center shrink-0">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" strokeWidth="8" />
-                        <circle cx="50" cy="50" r="45" fill="none" stroke={isAbnormal ? "#ef4444" : "#10b981"} strokeWidth="8" 
-                            strokeDasharray={283} strokeDashoffset={283 - (record.confidence / 100) * 283} strokeLinecap="round" />
-                    </svg>
-                    <div className="absolute text-center">
-                        <span className="block text-2xl font-bold font-poppins">{record.confidence.toFixed(0)}%</span>
-                        <span className="block text-[10px] text-gray-400 uppercase">Confidence</span>
-                    </div>
-                </div>
                 <div className="flex-1 text-center sm:text-left">
                     <span className={`inline-flex px-3 py-1.5 rounded-full text-xs font-bold mb-3 border ${statusStyle}`}>
                         {statusLabel}
                     </span>
-                    <h3 className="text-xl font-bold font-poppins mb-2">{isAbnormal ? "Further Medical Review Needed" : "Healthy Liver Profile"}</h3>
-                    <p className="text-sm text-gray-500 font-barlow leading-relaxed">{summary}</p>
+                    <h3 className="text-xl font-bold font-poppins mb-2">{isAbnormal ? "Medical Consultation Advised" : "Healthy Biomarker Profile"}</h3>
+                    <p className="text-sm text-gray-500 font-barlow leading-relaxed">
+                        {isAbnormal 
+                          ? "Our analysis suggests that you should visit a healthcare professional for a detailed consultation regarding your liver markers."
+                          : "Your biomarker levels are within the normal range. You do not need to consult a doctor at this time."
+                        }
+                    </p>
                 </div>
              </div>
           </div>

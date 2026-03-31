@@ -7,20 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeProvider";
 
 const NAV_ITEMS = [
-  {
-    name: "Overview",
-    path: "/dashboard",
-    desc: "Your health summary",
-    icon: (
-      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-          d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-      </svg>
-    ),
-    gradient: "from-cyan-500 to-teal-500",
-    glow: "shadow-cyan-400/30",
-    badge: null,
-  },
+
   {
     name: "Analyze",
     path: "/dashboard/analyze",
@@ -78,7 +65,7 @@ const NAV_ITEMS = [
 ];
 
 const PAGE_NAMES: Record<string, string> = {
-  "/dashboard": "Overview",
+
   "/dashboard/analyze": "Analyze",
   "/dashboard/analyze/liver": "Liver Analysis",
   "/dashboard/history": "History",
@@ -199,17 +186,7 @@ export default function CommandLauncher() {
 
                 {/* Right controls */}
                 <div className="flex items-center gap-2">
-                  {/* Theme */}
-                  <button
-                    onClick={toggleTheme}
-                    className="w-9 h-9 rounded-2xl bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cyan-100 dark:hover:bg-cyan-900/30 hover:text-cyan-700 dark:hover:text-cyan-400 transition"
-                  >
-                    {theme === "dark" ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                    )}
-                  </button>
+
 
                   {/* Close */}
                   <button
