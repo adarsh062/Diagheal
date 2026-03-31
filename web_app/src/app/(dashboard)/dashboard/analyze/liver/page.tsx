@@ -361,7 +361,7 @@ export default function LiverAnalyzePage() {
             })
         );
         try {
-            const response = await fetch("http://127.0.0.1:8000/analyze-report", {
+            const response = await fetch("https://diagheal.onrender.com/analyze-report", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
                 body: JSON.stringify(payload),
