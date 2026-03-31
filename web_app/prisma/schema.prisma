@@ -1,10 +1,10 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = "library"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -57,42 +57,42 @@ model VerificationToken {
 }
 
 model Record {
-  id          String   @id @default(cuid())
-  type        String   @default("LIVER") 
-  prediction  Int      // 0 for Normal, 1 for Action Needed
-  confidence  Float
+  id           String   @id @default(cuid())
+  type         String   @default("LIVER") 
+  prediction   Int      // 0 for Normal, 1 for Action Needed
+  confidence   Float
 
   // Liver Biomarkers
-  age         Int?
-  gender      String?
-  tb          Float?
-  db          Float?
-  alkphos     Float?
-  sgpt        Float?
-  sgot        Float?
-  tp          Float?
-  alb         Float?
-  agRatio     Float?
+  age          Int?
+  gender       String?
+  tb           Float?
+  db           Float?
+  alkphos      Float?
+  sgpt         Float?
+  sgot         Float?
+  tp           Float?
+  alb          Float?
+  agRatio      Float?
   
-  summary         String? @db.Text
+  summary      String?  @db.Text
   recommendations Json?
 
-  userId      String
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Appointment {
-  id          String   @id @default(cuid())
-  doctorName  String
-  specialty   String
-  hospital    String
-  date        DateTime
-  timeSlot    String   // "morning", "evening"
-  status      String   @default("PENDING") 
+  id           String   @id @default(cuid())
+  doctorName   String
+  specialty    String
+  hospital     String
+  date         DateTime
+  timeSlot     String   // "morning", "evening"
+  status       String   @default("PENDING") 
   
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  createdAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
 }
