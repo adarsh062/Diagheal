@@ -48,7 +48,7 @@ export default function Navbar() {
 
   // Avatar initials from name
   const initials = user?.name
-    ? user.name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    ? user.name.split(" ").filter(Boolean).map((w) => w[0]).join("").toUpperCase().slice(0, 2)
     : "?";
 
   const navLinks = [

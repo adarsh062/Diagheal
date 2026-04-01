@@ -92,8 +92,6 @@ function AuthProviderContent({ children }: { children: React.ReactNode }) {
 
     const canAnalyze = status === "authenticated" || freeReportsUsed < FREE_LIMIT;
 
-    if (!mounted) return null; // avoid hydration mismatch
-
     return (
         <AuthContext.Provider value={{ 
             user: mappedUser, 

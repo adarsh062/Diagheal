@@ -1,14 +1,13 @@
 export const dynamic = "force-dynamic";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import PrintReportClient from "@/components/features/dashboard/PrintReportClient";
 
 interface PrintReportPageProps {
     params: { id: string };
 }
 
 export default async function PrintReportPage({ params }: PrintReportPageProps) {
-    const { id } = await params;
+    const { id } = params;
 
     const record = await prisma.record.findUnique({
         where: { id },

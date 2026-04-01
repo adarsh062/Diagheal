@@ -48,8 +48,8 @@ export default function Sidebar() {
   };
 
   const initials = user?.name
-    ? user.name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
-    : "U";
+    ? user.name.split(" ").filter(Boolean).map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "?";
 
   const handleLogout = () => {
     setShowProfileMenu(false);
