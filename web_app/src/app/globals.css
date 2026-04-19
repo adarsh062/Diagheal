@@ -335,3 +335,37 @@ html {
 .animate-launcher-up {
   animation: launcher-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   20. CUSTOM SCROLLBAR & LEAFLET FIXES
+   ───────────────────────────────────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.5rem;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1rem !important;
+  padding: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+}
+
+.leaflet-popup-tip-container {
+  display: none !important;
+}

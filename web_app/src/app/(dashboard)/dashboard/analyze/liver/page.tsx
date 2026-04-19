@@ -361,6 +361,7 @@ export default function LiverAnalyzePage() {
             })
         );
         try {
+          //fetch from ai engine   
             const response = await fetch("https://diagheal.onrender.com/analyze-report", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
@@ -698,44 +699,29 @@ export default function LiverAnalyzePage() {
                                 </div>
                             </div>
 
-                            {/* ── Recommended Doctors ── */}
+                            {/* ── Recommended Specialists Integration ── */}
                             {isAbnormal && (
-                                <div>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="text-xl font-poppins font-bold text-gray-900 dark:text-white">Recommended Specialists</h3>
-                                                <span className="text-xs font-bold text-orange-700 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/20 px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-800/40">Action Advised</span>
+                                <div className="animate-in slide-in-from-bottom-5 duration-1000">
+                                    <div className="bg-gradient-to-br from-orange-500/10 to-transparent p-10 rounded-[3.5rem] border border-orange-500/20 backdrop-blur-xl">
+                                        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+                                            <div className="space-y-4 text-center md:text-left">
+                                                <div className="flex items-center justify-center md:justify-start gap-3">
+                                                    <span className="px-4 py-1.5 bg-orange-500 text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-orange-500/20">Critical Alert</span>
+                                                    <span className="text-orange-600 dark:text-orange-400 font-bold text-sm font-poppins">Action Advised</span>
+                                                </div>
+                                                <h3 className="text-4xl font-poppins font-black text-slate-900 dark:text-white leading-tight tracking-tighter">Consult a Liver Specialist</h3>
+                                                <p className="text-slate-500 dark:text-slate-400 font-barlow text-lg max-w-xl leading-relaxed italic">
+                                                    Your biomarker profile indicates substantial irregularities. We have identified verified <b>Hepatologists</b> and <b>Gastroenterologists</b> in the Bhopal region ready for consultation.
+                                                </p>
                                             </div>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-barlow">Based on your results, we recommend consulting a liver specialist.</p>
+                                            <Link 
+                                                href="/dashboard/doctors?specialty=Hepatologist"
+                                                className="group relative px-12 py-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-3xl hover:scale-105 active:scale-95 transition-all flex items-center gap-4 overflow-hidden"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                                                Identify Specialists <span className="text-xl group-hover:translate-x-2 transition-transform">→</span>
+                                            </Link>
                                         </div>
-                                        <span className="hidden md:block text-xs font-bold text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 px-3 py-1 rounded-full border border-cyan-100 dark:border-cyan-800/40">📍 Bhopal, MP</span>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {MOCK_DOCTORS.map((doc) => (
-                                            <button key={doc.id} onClick={() => setSelectedDoctor(doc)}
-                                                className="text-left group bg-white/60 dark:bg-slate-900/50 backdrop-blur-xl border border-white/80 dark:border-slate-700 rounded-[2rem] p-5 hover:shadow-lg hover:shadow-cyan-100/50 dark:hover:shadow-none hover:-translate-y-1 hover:border-cyan-200 dark:hover:border-cyan-700/50 transition-all duration-300">
-                                                <div className="flex items-start gap-3 mb-4">
-                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center text-white font-bold font-poppins shrink-0 text-sm">{doc.avatar}</div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="font-bold text-gray-900 dark:text-white font-poppins text-sm truncate group-hover:text-cyan-700 dark:group-hover:text-cyan-400 transition-colors">{doc.name}</h4>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400 font-barlow truncate">{doc.specialty}</p>
-                                                        <Stars rating={doc.rating} />
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 font-barlow mb-3">
-                                                    <span>✦ {doc.experience} yrs exp</span>
-                                                    <span>📍 {doc.distance}</span>
-                                                </div>
-                                                <div className="bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800/40 rounded-xl px-3 py-1.5 flex items-center justify-between mb-3">
-                                                    <span className="text-[11px] text-gray-500 dark:text-gray-400">Next Available</span>
-                                                    <span className="text-[11px] font-bold text-cyan-700 dark:text-cyan-400">{doc.nextAvailable}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1 text-cyan-600 dark:text-cyan-400 text-xs font-bold group-hover:gap-2 transition-all">
-                                                    Book Appointment <span>→</span>
-                                                </div>
-                                            </button>
-                                        ))}
                                     </div>
                                 </div>
                             )}
