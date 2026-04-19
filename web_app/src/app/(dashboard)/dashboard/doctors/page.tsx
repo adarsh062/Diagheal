@@ -1,7 +1,9 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState, useMemo } from "react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { fetchNearbyMedicalFacilities, OsmElement } from "@/lib/overpass";
@@ -12,7 +14,7 @@ import {
 } from "lucide-react";
 
 // Dynamically import Map component to avoid SSR issues
-const DoctorMap = dynamic(() => import("@/components/features/DoctorMap"), { 
+const DoctorMap = nextDynamic(() => import("@/components/features/DoctorMap"), { 
     ssr: false,
     loading: () => <div className="h-[400px] w-full bg-slate-100/50 backdrop-blur-md animate-pulse flex flex-col items-center justify-center rounded-[2rem] border-2 border-dashed border-slate-200/50">
         <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
@@ -410,3 +412,5 @@ export default function DoctorsPage() {
         </main>
     );
 }
+
+
