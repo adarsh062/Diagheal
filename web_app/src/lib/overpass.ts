@@ -40,9 +40,9 @@ function generateFallbackData(lat: number, lon: number): OsmElement[] {
     }));
 }
 
-export async function fetchNearbyMedicalFacilities(lat: number, lon: number, radius: number = 5000): Promise<OsmElement[]> {
+export async function fetchNearbyMedicalFacilities(lat: number, lon: number, radius: number = 1500): Promise<OsmElement[]> {
     const query = `
-        [out:json][timeout:15];
+        [out:json][timeout:25];
         (
             node["amenity"~"hospital|doctors|clinic"](around:${radius}, ${lat}, ${lon});
             way["amenity"~"hospital|doctors|clinic"](around:${radius}, ${lat}, ${lon});
@@ -55,9 +55,11 @@ export async function fetchNearbyMedicalFacilities(lat: number, lon: number, rad
     for (const mirror of OVERPASS_MIRRORS) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s per mirror
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 12s per mirror
 
-            const response = await fetch(`${mirror}?data=${encodedQuery}`, {
+            const response = await fetch(mirror, {
+                method: "POST",
+                body: query,
                 signal: controller.signal
             });
 

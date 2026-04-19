@@ -30,3 +30,4 @@ The application is now stable, crash-free, and features a more robust and intera
 
 python -m uvicorn main:app --reload   ai-engine
 docker-compose up -d           diagheal/
+"https://diagheal.onrender.com/analyze-report"
