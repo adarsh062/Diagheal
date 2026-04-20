@@ -1,6 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useState, useRef } from "react";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -720,7 +721,7 @@ export default function LiverAnalyzePage() {
                                             >
                                                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-teal-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
                                                 Identify Specialists <span className="text-xl group-hover:translate-x-2 transition-transform">→</span>
-                                            </Link>
+                                            </Link> 
                                         </div>
                                     </div>
                                 </div>

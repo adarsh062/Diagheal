@@ -25,22 +25,26 @@ const OVERPASS_MIRRORS = [
  * Fallback generator for realistic medical data if API is down
  */
 function generateFallbackData(lat: number, lon: number): OsmElement[] {
-    const specialties = ["Apex Hospital", "Lifeline Clinic", "City Medical Center", "Wellness Hospital", "Grace Doctors Hub"];
-    return specialties.map((name, i) => ({
-        type: "node",
-        id: 999000 + i,
-        lat: lat + (Math.random() - 0.5) * 0.02,
-        lon: lon + (Math.random() - 0.5) * 0.02,
-        tags: {
-            name: name,
-            amenity: "hospital",
-            "addr:street": "Main Road Sector " + (i + 1),
-            phone: "+91-755-400-120" + i
-        }
-    }));
+    const specialties = ["Apex Hospital", "Lifeline Clinic", "City Medical", "Wellness Hub", "Grace Doctors", "CarePlus", "Healing Hands", "Prime Care", "Harmony Medical", "Good Health Center"];
+    const fallback: OsmElement[] = [];
+    for (let i = 0; i < 40; i++) {
+        fallback.push({
+            type: "node",
+            id: 999000 + i,
+            lat: lat + (Math.random() - 0.5) * 0.1,
+            lon: lon + (Math.random() - 0.5) * 0.1,
+            tags: {
+                name: specialties[i % specialties.length] + " " + String.fromCharCode(65 + (i % 26)),
+                amenity: "hospital",
+                "addr:street": "Main Road Sector " + (i + 1),
+                phone: "+91-700-400-" + (1000 + i)
+            }
+        });
+    }
+    return fallback;
 }
 
-export async function fetchNearbyMedicalFacilities(lat: number, lon: number, radius: number = 1500): Promise<OsmElement[]> {
+export async function fetchNearbyMedicalFacilities(lat: number, lon: number, radius: number = 15000): Promise<OsmElement[]> {
     const query = `
         [out:json][timeout:25];
         (
@@ -59,7 +63,10 @@ export async function fetchNearbyMedicalFacilities(lat: number, lon: number, rad
 
             const response = await fetch(mirror, {
                 method: "POST",
-                body: query,
+                body: "data=" + encodedQuery,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
                 signal: controller.signal
             });
 
