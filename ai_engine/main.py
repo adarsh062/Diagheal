@@ -15,11 +15,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-with open("models/liver_model.pkl", "rb") as f:
-    bundle = pickle.load(f)
+with open("models/ilpd_model.pkl", "rb") as f:
+    model, scaler, custom_threshold = pickle.load(f)
 
-pipe = bundle["pipeline"]
-custom_threshold = bundle["threshold"]
+# Override the threshold value to 0.7 as requested
+custom_threshold = 0.80
 
 class PatientData(BaseModel):
     Age: int
@@ -40,23 +40,33 @@ def home():
 @app.post("/analyze-report")
 def analyze_report(data: PatientData):
     try:
-        # 2. Convert Pydantic model to DataFrame
-        # IMPORTANT: Ensure keys match the column names the pipeline was trained on
-        input_df = pd.DataFrame([{
-            'age': data.Age,
-            'gender': data.Gender,
-            'total_bilirubin': data.TB,
-            'direct_bilirubin': data.DB,
-            'alkaline_phosphotase': data.Alkphos,
-            'alamine_aminotransferase': data.Sgpt,
-            'aspartate_aminotransferase': data.Sgot,
-            'total_protiens': data.TP,
-            'albumin': data.ALB,
-            'albumin_and_globulin_ratio': data.AG_Ratio
-        }])
+        gender_encoded = 1 if data.Gender.lower() == 'male' else 0
 
-        # 3. Predict using the pipeline
-        prob = pipe.predict_proba(input_df)[0][1]
+        TB_DB_ratio = data.TB / data.DB if data.DB != 0 else 0
+        SGOT_SGPT_ratio = data.Sgot / data.Sgpt if data.Sgpt != 0 else 0
+        TB_Alb_ratio = data.TB / data.ALB if data.ALB != 0 else 0
+        DB_Alb_ratio = data.DB / data.ALB if data.ALB != 0 else 0
+
+        sample = np.array([[
+            data.Age,
+            gender_encoded,
+            data.TB,
+            data.DB,
+            data.Alkphos,
+            data.Sgpt,
+            data.Sgot,
+            data.TP,
+            data.ALB,
+            data.AG_Ratio,
+            TB_DB_ratio,
+            SGOT_SGPT_ratio,
+            TB_Alb_ratio,
+            DB_Alb_ratio
+        ]])
+
+        sample_scaled = scaler.transform(sample)
+
+        prob = model.predict_proba(sample_scaled)[0][1]
         prediction = 1 if prob >= custom_threshold else 0
 
         return {
